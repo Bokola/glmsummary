@@ -10,11 +10,11 @@ install_load_packages <- function(pkg){
   require(pkg[[i]], character.only = TRUE)
 }
 
-pks <- c(
-  "devtools", "roxygen2", "knitr", "testthat", "pkgdown"
-)
-
-install_load_packages(pks)
+# pks <- c(
+#   "devtools", "roxygen2", "knitr", "testthat", "pkgdown"
+# )
+#
+# install_load_packages(pks)
 
 # extract coefsficients
 
