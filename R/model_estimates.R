@@ -1,61 +1,82 @@
 
+
 # extract coefficients
 
-model_estimates <- function(model){
+#' Get model estimates, standard error and p-values
+#'
+#' @param model an R object of the model
+#'
+#' @return a data frame of model coefficients, standard error and p-value
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' model_estimates()
+#' }
+model_estimates <- function(model) {
+  `p value` <- . <- NULL
   options(digits = 4)
   if (class(model)[1] %in% c("glm", "lm", "vglm",
                              "LORgee")) {
-    coefs <- coefs(summary(model)) %>%
-      as.data.frame() %>%
-      dplyr::add_rownames()
-    coefs <- coefs %>%
+    coefs <- coef(summary(model)) |>
+      as.data.frame() |>
+      tibble::rownames_to_column()
+    coefs <- coefs |>
       `colnames<-`(c("variable", "estimate", "se",
                      "z value", "p value"))
-    coefs <- coefs %>%
-      mutate(., `signif code` = ifelse(`p value` <
-                                         0.001, "***", ifelse(`p value` < 0.01,
-                                                              "**", ifelse(`p value` < 0.05, "*",
-                                                                           ""))))
-    # coefs = coefs %>% mutate(., estimate =
+    coefs <- coefs |>
+      dplyr::mutate(., `significance code` = ifelse(
+        `p value` <
+          0.001,
+        "***",
+        ifelse(`p value` < 0.01,
+               "**", ifelse(`p value` < 0.05, "*",
+                            ""))
+      ))
+    # coefs = coefs |> dplyr::mutate(., estimate =
     # paste0(estimate, ' (', se,')'), `p
-    # value` = paste0(`p value`, ' ', `signif
-    # code`)) coefs = coefs %>%
-    # dplyr::select(-se, - `signif code`)
-    coefs <- coefs %>%
-      mutate(across(where(is.numeric), round,
+    # value` = paste0(`p value`, ' ', `significance
+    # code`)) coefs = coefs |>
+    # dplyr::select(-se, - `significance code`)
+    coefs <- coefs |>
+      dplyr::mutate(dplyr::across(dplyr::where(is.numeric), round,
                     4))
   }
   if (class(model)[1] %in% c("glimML")) {
-    coefs <- summary(model)@coefs %>%
-      as.data.frame() %>%
-      dplyr::add_rownames()
-    coefs <- coefs %>%
+    coefs <- summary(model)@coefs |>
+      as.data.frame() |>
+      tibble::rownames_to_column()
+    coefs <- coefs |>
       `colnames<-`(c("variable", "estimate", "se",
                      "z value", "p value"))
-    coefs <- coefs %>%
-      mutate(., `signif code` = ifelse(`p value` <
-                                         0.001, "***", ifelse(`p value` < 0.01,
-                                                              "**", ifelse(`p value` < 0.05, "*",
-                                                                           ""))))
-    # coefs = coefs %>% mutate(., estimate =
+    coefs <- coefs |>
+      dplyr::mutate(., `significance code` = ifelse(
+        `p value` <
+          0.001,
+        "***",
+        ifelse(`p value` < 0.01,
+               "**", ifelse(`p value` < 0.05, "*",
+                            ""))
+      ))
+    # coefs = coefs |> dplyr::mutate(., estimate =
     # paste0(estimate, ' (', se,')'), `p
-    # value` = paste0(`p value`, ' ', `signif
-    # code`)) coefs = coefs %>%
-    # dplyr::select(-se, - `signif code`)
-    coefs <- coefs %>%
-      mutate(across(where(is.numeric), round,
+    # value` = paste0(`p value`, ' ', `significance
+    # code`)) coefs = coefs |>
+    # dplyr::select(-se, - `significance code`)
+    coefs <- coefs |>
+      dplyr::mutate(dplyr::across(dplyr::where(is.numeric), round,
                     4))
   }
 
 
   if (class(model)[1] %in% c("gee")) {
-    coefs <- coefs(summary(model)) %>%
-      as.data.frame() %>%
-      dplyr::add_rownames() %>%
-      dplyr::select(!!c(1:2, 6)) %>%
+    coefs <- coef(summary(model)) |>
+      as.data.frame() |>
+      tibble::rownames_to_column() |>
+      dplyr::select(!!c(1:2, 6)) |>
       `colnames<-`(c("variable", "estimate", "se"))
-    coefs <- coefs %>%
-      mutate(across(where(is.numeric), round,
+    coefs <- coefs |>
+      dplyr::mutate(dplyr::across(dplyr::where(is.numeric), round,
                     4))
   }
 
