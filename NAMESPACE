@@ -2,6 +2,7 @@
 
 export(extract_aic_bic)
 export(extract_overdispersion)
+export(install_load_packages)
 export(model_estimates)
 export(model_rank)
 export(working_corr)
