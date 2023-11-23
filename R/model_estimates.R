@@ -16,11 +16,11 @@
 model_estimates <- function(model) {
   `p value` <- . <- NULL
   options(digits = 4)
-  if (class(model)[1] %in% c("glm", "lm", "vglm",
+  if (class(model)[1] %in% c("glm", "lm",
                              "LORgee")) {
-    coefs <- coef(summary(model)) |>
-      as.data.frame() |>
-      tibble::rownames_to_column()
+    coefs <- coefficients(summary(model)) |>
+      as.data.frame()
+    coefs <- tibble::rownames_to_column(coefs)
     coefs <- coefs |>
       `colnames<-`(c("variable", "estimate", "se",
                      "z value", "p value"))
@@ -42,35 +42,8 @@ model_estimates <- function(model) {
       dplyr::mutate(dplyr::across(dplyr::where(is.numeric), round,
                     4))
   }
-  if (class(model)[1] %in% c("glimML")) {
-    coefs <- summary(model)@coefs |>
-      as.data.frame() |>
-      tibble::rownames_to_column()
-    coefs <- coefs |>
-      `colnames<-`(c("variable", "estimate", "se",
-                     "z value", "p value"))
-    coefs <- coefs |>
-      dplyr::mutate(., `significance code` = ifelse(
-        `p value` <
-          0.001,
-        "***",
-        ifelse(`p value` < 0.01,
-               "**", ifelse(`p value` < 0.05, "*",
-                            ""))
-      ))
-    # coefs = coefs |> dplyr::mutate(., estimate =
-    # paste0(estimate, ' (', se,')'), `p
-    # value` = paste0(`p value`, ' ', `significance
-    # code`)) coefs = coefs |>
-    # dplyr::select(-se, - `significance code`)
-    coefs <- coefs |>
-      dplyr::mutate(dplyr::across(dplyr::where(is.numeric), round,
-                    4))
-  }
-
-
   if (class(model)[1] %in% c("gee")) {
-    coefs <- coef(summary(model)) |>
+    coefs <- coefficients(summary(model)) |>
       as.data.frame() |>
       tibble::rownames_to_column() |>
       dplyr::select(!!c(1:2, 6)) |>
