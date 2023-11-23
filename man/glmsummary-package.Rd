@@ -8,6 +8,13 @@
 \description{
 Extraction of model summaries of GLM and GLMM family of models in R. Outputs model summary tables. Uses join functions in dplyr and piping to facilitate extraction.
 }
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://bokola.github.io/glmsummary/}
+}
+
+}
 \author{
 \strong{Maintainer}: Basil Okola \email{okolabasilowiti@gmail.com}
 
