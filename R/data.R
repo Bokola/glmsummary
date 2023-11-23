@@ -1,7 +1,7 @@
 #' DYME data
 #'
 #'
-#' @format ## `dyme1`
+#' @format ## `df`
 #' A data frame with 1,199 rows and 11 columns of pregnant mice exposed to varying
 #'  dyme doses in litters (clusters):
 #' \describe{
@@ -16,4 +16,4 @@
 #'   ...
 #' }
 #' @source <Price et al. (1987).>
-"dyme1"
+"df"
