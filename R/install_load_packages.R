@@ -15,5 +15,5 @@ install_load_packages <- function(pkg){
       pkg[[i]], dependencies = TRUE, repos = "https://cran.rstudio.org"
     )
   }
-  require(pkg[[i]], character.only = TRUE)
+  library(pkg[[i]], character.only = TRUE)
 }
